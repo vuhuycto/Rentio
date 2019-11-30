@@ -13,7 +13,7 @@ Base.metadata.create_all(engine)
 
 @app.route("/")
 def index():
-    return str(os.getcwd())
+    return str(os.listdir())
 
 
 if __name__ == '__main__':
