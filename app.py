@@ -12,7 +12,7 @@ app.secret_key = os.urandom(16)
 
 @app.route("/")
 def index():
-    return os.getcwd()
+    return "Hello World"
 
 
 api = Api(app)
