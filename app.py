@@ -63,5 +63,5 @@ api.add_resource(RenterNotification, "/notification/renters/<int:renter_id>")
 api.add_resource(LenderNotification, "/notification/lenders/<int:lender_id>")
 
 if __name__ == '__main__':
-    app.run()
+    app.run(port=os.environ.get("PORT", 5000))
 
