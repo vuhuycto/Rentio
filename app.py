@@ -21,28 +21,28 @@ jwt = JWT(app, authentication, identity)    # /auth
 
 Base.metadata.create_all(engine)
 
-# from database import session
-# from models.product import CatalogModel
-# from models.person import AdminModel
-# 
-# catalog1 = CatalogModel(type="household", img_url="http://0.0.0.0/household")
-# catalog2 = CatalogModel(type="device", img_url="http://0.0.0.0/device")
-#
-# admin = AdminModel(
-#     first_name="duy",
-#     last_name="le",
-#     gender="male",
-#     birthday="1998/03/04",
-#     email="duy0804@gmail.com",
-#     username="duy",
-#     password="123456",
-#     phone="2134560987",
-#     address="Hanoi")
-#
-# session.add(admin)
-# session.add(catalog1)
-# session.add(catalog2)
-# session.commit()
+from database import session
+from models.product import CatalogModel
+from models.person import AdminModel
+
+catalog1 = CatalogModel(type="household", img_url="http://0.0.0.0/household")
+catalog2 = CatalogModel(type="device", img_url="http://0.0.0.0/device")
+
+admin = AdminModel(
+    first_name="duy",
+    last_name="le",
+    gender="male",
+    birthday="1998/03/04",
+    email="duy0804@gmail.com",
+    username="duy",
+    password="123456",
+    phone="2134560987",
+    address="Hanoi")
+
+session.add(admin)
+session.add(catalog1)
+session.add(catalog2)
+session.commit()
 
 api.add_resource(UserRegister, "/register")
 api.add_resource(User, "/user/<string:username>")
