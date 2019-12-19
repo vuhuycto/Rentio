@@ -4,7 +4,7 @@ from models.person import UserModel
 
 
 class User(Resource):
-    # @jwt_required()
+    @jwt_required()
     def get(self, username):
         return UserModel.search_from_database_by_username(username).json(), 200
 
@@ -79,7 +79,7 @@ class Profile(Resource):
         required=True,
         help="This field cannot be left blank")
 
-    # @jwt_required()
+    @jwt_required()
     def post(self):
         data = Profile.parser.parse_args()
 
@@ -92,6 +92,6 @@ class Profile(Resource):
 
 
 class UserList(Resource):
-    # @jwt_required()
+    @jwt_required()
     def get(self):
         return {"users": [user.json() for user in UserModel.get_all_user()]}, 200

@@ -41,11 +41,11 @@ class Product(Resource):
         required=True,
         help="This field cannot be left blank")
 
-    # @jwt_required()
+    @jwt_required()
     def get(self, name):
         return {"products": product.json() for product in ProductModel.search_from_database_by_name(name)}, 200
 
-    # @jwt_required()
+    @jwt_required()
     def post(self, name):
         data = Product.parser.parse_args()
         data.update({"status": False})
@@ -59,7 +59,7 @@ class Product(Resource):
 
 
 class PopularProduct(Resource):
-    # @jwt_required()
+    @jwt_required()
     def get(self):
         products = []
         for product_id, name, img_vid_url, \
@@ -80,13 +80,13 @@ class PopularProduct(Resource):
 
 
 class CatalogBasedProduct(Resource):
-    # @jwt_required()
+    @jwt_required()
     def get(self, catalog_type):
         return {"products": [product.json() for product in ProductModel.search_from_database_by_catalog(catalog_type)]}
 
 
 class ProductList(Resource):
-    # @jwt_required()
+    @jwt_required()
     def get(self):
         return {"products": [product.json() for product in ProductModel.get_all_products()]}, 200
 

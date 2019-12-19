@@ -11,7 +11,7 @@ class Report(Resource):
         required=True,
         help="This field cannot be left blank")
 
-    # @jwt_required()
+    @jwt_required()
     def post(self, user_id):
         data = Report.parser.parse_args()
 

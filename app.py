@@ -14,7 +14,7 @@ from resources.report import Report
 from resources.notification import RenterNotification, LenderNotification
 
 app = Flask(__name__)
-app.secret_key = os.urandom(16)
+# app.secret_key = os.urandom(16)
 api = Api(app)
 
 jwt = JWT(app, authentication, identity)    # /auth

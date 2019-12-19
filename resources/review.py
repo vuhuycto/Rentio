@@ -27,11 +27,11 @@ class Review(Resource):
         required=True,
         help="This field cannot be left blank")
 
-    # @jwt_required()
+    @jwt_required()
     def get(self, product_id):
         return {"reviews": review.json() for review in ReviewModel.search_from_database_by_product_id(product_id)}, 200
 
-    # @jwt_required()
+    @jwt_required()
     def post(self, product_id):
         data = Review.parser.parse_args()
 
