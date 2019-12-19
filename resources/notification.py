@@ -4,7 +4,7 @@ from models.order import OrderModel
 
 
 class RenterNotification(Resource):
-    @jwt_required()
+    # @jwt_required()
     def get(self, renter_id):
         orders = []
         for order in OrderModel.get_not_notified_orders(renter_id):
@@ -14,6 +14,6 @@ class RenterNotification(Resource):
 
 
 class LenderNotification(Resource):
-    @jwt_required()
+    # @jwt_required()
     def get(self, lender_id):
         return {"pending_requests": [request.json() for request in OrderModel.get_pending_requests(lender_id)]}, 200

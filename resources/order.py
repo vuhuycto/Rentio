@@ -42,7 +42,7 @@ class RequestedOrder(Resource):
         required=True,
         help="This field cannot be left blank")
 
-    @jwt_required()
+    # @jwt_required()
     def get(self, product_id):
         requested = OrderModel.search_requested_from_database_by_id(product_id)
 
@@ -51,7 +51,7 @@ class RequestedOrder(Resource):
 
         return requested.json(), 200
 
-    @jwt_required()
+    # @jwt_required()
     def post(self, product_id):
         data = RequestedOrder.parser.parse_args()
 
@@ -66,7 +66,7 @@ class RequestedOrder(Resource):
 
 
 class RequestedOrderList(Resource):
-    @jwt_required()
+    # @jwt_required()
     def get(self, user_id):
         return {"requested_orders":
                     [product.json() for product in OrderModel.search_requested_orders_from_database_by_user(user_id)]}, 200
@@ -120,11 +120,11 @@ class ResponsedOrder(Resource):
         required=True,
         help="This field cannot be left blank")
 
-    @jwt_required()
+    # @jwt_required()
     def get(self, product_id):
         return OrderModel.search_order_from_database_by_id(product_id).json(), 200
 
-    @jwt_required()
+    # @jwt_required()
     def post(self, product_id):
         data = ResponsedOrder.parser.parse_args()
         data.update({"notified": False})
@@ -139,7 +139,7 @@ class ResponsedOrder(Resource):
 
 
 class ResponsedOrderList(Resource):
-    @jwt_required()
+    # @jwt_required()
     def get(self, user_id):
         return {"orders":
                     [order.json() for order in OrderModel.search_responsed_orders_from_database_by_user(user_id)]}, 200
