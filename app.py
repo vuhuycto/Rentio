@@ -14,35 +14,35 @@ from resources.report import Report
 from resources.notification import RenterNotification, LenderNotification
 
 app = Flask(__name__)
-# app.secret_key = os.urandom(16)
+app.secret_key = os.urandom(16)
 api = Api(app)
 
 jwt = JWT(app, authentication, identity)    # /auth
 
 Base.metadata.create_all(engine)
 
-from database import session
-from models.product import CatalogModel
-from models.person import AdminModel
-
-catalog1 = CatalogModel(type="household", img_url="http://0.0.0.0/household")
-catalog2 = CatalogModel(type="device", img_url="http://0.0.0.0/device")
-
-admin = AdminModel(
-    first_name="duy",
-    last_name="le",
-    gender="male",
-    birthday="1998/03/04",
-    email="duy0804@gmail.com",
-    username="duy",
-    password="123456",
-    phone="2134560987",
-    address="Hanoi")
-
-session.add(admin)
-session.add(catalog1)
-session.add(catalog2)
-session.commit()
+# from database import session
+# from models.product import CatalogModel
+# from models.person import AdminModel
+#
+# catalog1 = CatalogModel(type="household", img_url="http://0.0.0.0/household")
+# catalog2 = CatalogModel(type="device", img_url="http://0.0.0.0/device")
+#
+# admin = AdminModel(
+#     first_name="duy",
+#     last_name="le",
+#     gender="male",
+#     birthday="1998/03/04",
+#     email="duy0804@gmail.com",
+#     username="duy",
+#     password="123456",
+#     phone="2134560987",
+#     address="Hanoi")
+#
+# session.add(admin)
+# session.add(catalog1)
+# session.add(catalog2)
+# session.commit()
 
 api.add_resource(UserRegister, "/register")
 api.add_resource(User, "/user/<string:username>")
@@ -63,5 +63,4 @@ api.add_resource(RenterNotification, "/notification/renters/<int:renter_id>")
 api.add_resource(LenderNotification, "/notification/lenders/<int:lender_id>")
 
 if __name__ == '__main__':
-    app.run(port=os.environ.get("PORT", 5000))
-
+    app.run(host="192.168.2.107", port=8080)

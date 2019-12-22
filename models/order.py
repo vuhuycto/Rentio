@@ -5,17 +5,17 @@ from database import Base, session
 
 
 class OrderModel(Base):
-    __tablename__ = "order"
+    __tablename__ = "orders"
 
     id = Column(Integer, primary_key=True)
-    product_id = Column(Integer, ForeignKey("product.id"))
+    product_id = Column(Integer, ForeignKey("products.id"))
     start_date = Column(String(100))
     end_date = Column(String(100))
     lender_national_id = Column(String(12))
     renter_national_id = Column(String(12), nullable=True)
     bank_number = Column(String(14))
-    lender_id = Column(Integer, ForeignKey("user.id"))
-    renter_id = Column(Integer, ForeignKey("user.id"))
+    lender_id = Column(Integer, ForeignKey("users.id"))
+    renter_id = Column(Integer, ForeignKey("users.id"))
     accepted = Column(Boolean, nullable=True)
     notified = Column(Boolean, nullable=True)
 

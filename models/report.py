@@ -4,10 +4,10 @@ from database import Base, session
 
 
 class ReportModel(Base):
-    __tablename__ = "report"
+    __tablename__ = "reports"
 
     id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey("user.id"))
+    user_id = Column(Integer, ForeignKey("users.id"))
     removed = Column(Boolean, nullable=True)
 
     user = relationship("UserModel", back_populates="report")

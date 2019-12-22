@@ -26,7 +26,7 @@ class Person:
 
 
 class AdminModel(Base, Person):
-    __tablename__ = "admin"
+    __tablename__ = "admins"
 
     id = Column(Integer, primary_key=True)
     first_name = Column(String(50))
@@ -56,7 +56,7 @@ class AdminModel(Base, Person):
 
 
 class UserModel(Base, Person):
-    __tablename__ = "user"
+    __tablename__ = "users"
 
     id = Column(Integer, primary_key=True)
     first_name = Column(String(50))
@@ -95,15 +95,18 @@ class UserModel(Base, Person):
             "first_name": self.first_name,
             "last_name": self.last_name,
             "gender": self.gender,
-            "birthday": self.birthday.strftime("%Y/%m/%d") if isinstance(self.birthday, datetime.date) else self.birthday,
+            "birthday": self.birthday.\
+                strftime("%Y/%m/%d") if isinstance(self.birthday, datetime.date) else self.birthday,
             "email": self.email,
             "username": self.username,
             "password": self.password,
             "phone": self.phone,
             "address": self.address,
             "job": self.job,
-            "free_trial_start": self.free_trial_start,
-            "free_trial_end": self.free_trial_end
+            "free_trial_start": self.free_trial_start.\
+                strftime("%Y/%m/%d") if isinstance(self.free_trial_start, datetime.date) else self.free_trial_start,
+            "free_trial_end": self.free_trial_end.\
+                strftime("%Y/%m/%d") if isinstance(self.free_trial_end, datetime.date) else self.free_trial_end
         }
 
     @staticmethod

@@ -7,7 +7,7 @@ from models.review import ReviewModel
 
 
 class ProductModel(Base):
-    __tablename__ = "product"
+    __tablename__ = "products"
 
     id = Column(Integer, primary_key=True)
     name = Column(String(50))
@@ -16,7 +16,7 @@ class ProductModel(Base):
     daily_price = Column(Float, nullable=True)
     weekly_price = Column(Float, nullable=True)
     monthly_price = Column(Float, nullable=True)
-    user_id = Column(Integer, ForeignKey("user.id"))
+    user_id = Column(Integer, ForeignKey("users.id"))
 
     user = relationship("UserModel", back_populates="products")
     reviews = relationship("ReviewModel", back_populates="product", lazy="dynamic")
@@ -92,7 +92,7 @@ class ProductModel(Base):
 
 
 class CatalogModel(Base):
-    __tablename__ = "catalog"
+    __tablename__ = "catalogs"
 
     id = Column(Integer, primary_key=True)
     type = Column(String(50), unique=True)
@@ -123,5 +123,5 @@ class CatalogModel(Base):
 class ProductCatalogRelationship(Base):
     __tablename__ = "product_catalog_rel"
 
-    product_id = Column(Integer, ForeignKey("product.id"), primary_key=True)
-    catalog_id = Column(Integer, ForeignKey("catalog.id"), primary_key=True)
+    product_id = Column(Integer, ForeignKey("products.id"), primary_key=True)
+    catalog_id = Column(Integer, ForeignKey("catalogs.id"), primary_key=True)

@@ -5,13 +5,13 @@ from database import Base, session
 
 
 class ReviewModel(Base):
-    __tablename__ = "review"
+    __tablename__ = "reviews"
 
     id = Column(Integer, primary_key=True)
-    product_id = Column(Integer, ForeignKey("product.id"))
+    product_id = Column(Integer, ForeignKey("products.id"))
     comment = Column(String(100))
     star = Column(Integer)
-    user_id = Column(Integer, ForeignKey("user.id"))
+    user_id = Column(Integer, ForeignKey("users.id"))
 
     product = relationship("ProductModel", back_populates="reviews")
     user = relationship("UserModel", back_populates="reviews")
