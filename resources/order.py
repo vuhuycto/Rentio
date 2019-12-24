@@ -127,15 +127,16 @@ class ResponsedOrder(Resource):
     @jwt_required()
     def post(self, product_id):
         data = ResponsedOrder.parser.parse_args()
-        data.update({"notified": False})
+
+        if not data["accepted"]:
+            return {"message": "Your request has been denied"}, 400
+
+        data.update({"notified": False, "expired": False})
 
         OrderModel.update_order(data)
+        ProductModel.update_status(data["product_id"], data["accepted"])
 
-        if data["accepted"]:
-            ProductModel.update_status(data["product_id"], data["accepted"])
-            return {"message": "The lender has been accepted your request"}, 200
-
-        return {"message": "Your request has been denied"}, 400
+        return {"message": "The lender has been accepted your request"}, 200
 
 
 class ResponsedOrderList(Resource):

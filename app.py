@@ -11,7 +11,7 @@ from resources.product import Product, Catalog, PopularProduct, CatalogBasedProd
 from resources.order import RequestedOrder, RequestedOrderList, ResponsedOrder, ResponsedOrderList
 from resources.review import Review
 from resources.report import Report
-from resources.notification import RenterNotification, LenderNotification
+from resources.notification import RenterNotification, LenderNotification, ExpiringNotification, ExpiredNotification
 
 app = Flask(__name__)
 app.secret_key = os.urandom(16)
@@ -61,6 +61,8 @@ api.add_resource(Catalog, "/api/catalog")
 api.add_resource(Report, "/api/report/<int:user_id>")
 api.add_resource(RenterNotification, "/notification/renters/<int:renter_id>")
 api.add_resource(LenderNotification, "/notification/lenders/<int:lender_id>")
+api.add_resource(ExpiringNotification, "/notification/renters/<int:renter_id>/expiring")
+api.add_resource(ExpiredNotification, "/notification/renters/<int:renter_id>/expired")
 
 if __name__ == '__main__':
     app.run(host="192.168.2.107", port=8080)

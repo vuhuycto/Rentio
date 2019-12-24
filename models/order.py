@@ -1,4 +1,6 @@
-from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
+import datetime
+
+from sqlalchemy import Column, Integer, String, Boolean, Date, ForeignKey
 from sqlalchemy import and_
 from sqlalchemy.orm import relationship
 from database import Base, session
@@ -9,14 +11,15 @@ class OrderModel(Base):
 
     id = Column(Integer, primary_key=True)
     product_id = Column(Integer, ForeignKey("products.id"))
-    start_date = Column(String(100))
-    end_date = Column(String(100))
+    start_date = Column(Date)
+    end_date = Column(Date)
     lender_national_id = Column(String(12))
     renter_national_id = Column(String(12), nullable=True)
     bank_number = Column(String(14))
     lender_id = Column(Integer, ForeignKey("users.id"))
     renter_id = Column(Integer, ForeignKey("users.id"))
     accepted = Column(Boolean, nullable=True)
+    expired = Column(Boolean, nullable=True)
     notified = Column(Boolean, nullable=True)
 
     product = relationship("ProductModel", back_populates="order")
@@ -42,16 +45,29 @@ class OrderModel(Base):
         return {
             "id": self.id,
             "product_id": self.product_id,
-            "start_date": self.start_date,
-            "end_date": self.end_date,
+            "start_date": self.start_date.\
+                strftime("%Y/%m/%d") if isinstance(self.start_date, datetime.date) else self.start_date,
+            "end_date": self.end_date.\
+                strftime("%Y/%m/%d") if isinstance(self.end_date, datetime.date) else self.end_date,
             "lender_national_id": self.lender_national_id,
             "renter_national_id": self.renter_national_id,
             "bank_number": self.bank_number,
             "lender_id": self.lender_id,
             "renter_id": self.renter_id,
             "accepted": self.accepted,
+            "expired": self.expired,
             "notified": self.notified
         }
+
+    def set_notified(self):
+        session.query(OrderModel).filter(OrderModel.product_id == self.product_id).\
+            update({"notified": True}, synchronize_session=False)
+        session.commit()
+
+    def set_expired(self):
+        session.query(OrderModel).filter(OrderModel.id == self.id).\
+            update({"expired": True}, synchronize_session=False)
+        session.commit()
 
     @staticmethod
     def is_ordered_by(user_id, product_id):
@@ -95,15 +111,23 @@ class OrderModel(Base):
             filter(and_(OrderModel.renter_id == renter_id, OrderModel.notified == False)).all()
 
     @staticmethod
+    def get_expiring_orders(renter_id):
+        return session.query(OrderModel).\
+            filter(and_(OrderModel.end_date - datetime.date.today() <= 3,
+                        OrderModel.end_date - datetime.date.today() >= 1,
+                        OrderModel.renter_id == renter_id)).all()
+
+    @staticmethod
+    def get_expired_orders(renter_id):
+        return session.query(OrderModel).\
+            filter(and_(OrderModel.end_date - datetime.date.today() <= 0,
+                        OrderModel.renter_id == renter_id,
+                        OrderModel.expired == False)).all()
+
+    @staticmethod
     def get_pending_requests(lender_id):
         return session.query(OrderModel).\
             filter(and_(OrderModel.lender_id == lender_id, OrderModel.accepted == None)).all()
-
-    @staticmethod
-    def set_notified(product_id):
-        session.query(OrderModel).filter(OrderModel.product_id == product_id).\
-            update({"notified": True}, synchronize_session=False)
-        session.commit()
 
     @staticmethod
     def add_to_database(order):
