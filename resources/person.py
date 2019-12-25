@@ -91,6 +91,32 @@ class Profile(Resource):
         return {"message": "Update profile successfully"}, 200
 
 
+class TopLender(Resource):
+    def get(self):
+        lenders = []
+        for lender_id, first_name, last_name, gender, \
+            birthday, email, username, password, phone, address, \
+            job, free_trial_start, free_trial_end, average_star in UserModel.get_top_lender():
+            lender = {
+                "id": lender_id,
+                "first_name": first_name,
+                "last_name": last_name,
+                "gender": gender,
+                "birthday": birthday,
+                "email": email,
+                "username": username,
+                "password": password,
+                "phone": phone,
+                "address": address,
+                "job": job,
+                "free_trial_start": free_trial_start,
+                "free_trial_end": free_trial_end,
+                "average_star": average_star
+            }
+            lenders.append(lender)
+        return {"top_lender": lenders}, 200
+
+
 class UserList(Resource):
     @jwt_required()
     def get(self):

@@ -13,6 +13,7 @@ class ProductModel(Base):
     name = Column(String(50))
     img_vid_url = Column(String(100))
     status = Column(Boolean)
+    address = Column(String(50))
     daily_price = Column(Float, nullable=True)
     weekly_price = Column(Float, nullable=True)
     monthly_price = Column(Float, nullable=True)
@@ -33,6 +34,7 @@ class ProductModel(Base):
             "name": self.name,
             "img_vid_url": self.img_vid_url,
             "status": self.status,
+            "address": self.address,
             "daily_price": self.daily_price,
             "weekly_price": self.weekly_price,
             "monthly_price": self.monthly_price,
@@ -42,6 +44,10 @@ class ProductModel(Base):
     @staticmethod
     def search_from_database_by_name(name):
         return session.query(ProductModel).filter(ProductModel.name == name).all()
+
+    @staticmethod
+    def search_from_database_by_id(product_id):
+        return session.query(ProductModel).filter(ProductModel.id == product_id).first()
 
     @staticmethod
     def search_from_database_by_catalog(catalog_type):
@@ -63,6 +69,7 @@ class ProductModel(Base):
                 ProductModel.name,
                 ProductModel.img_vid_url,
                 ProductModel.status,
+                ProductModel.address,
                 ProductModel.daily_price,
                 ProductModel.weekly_price,
                 ProductModel.monthly_price,
@@ -74,6 +81,7 @@ class ProductModel(Base):
                 ProductModel.name,
                 ProductModel.img_vid_url,
                 ProductModel.status,
+                ProductModel.address,
                 ProductModel.daily_price,
                 ProductModel.weekly_price,
                 ProductModel.monthly_price,

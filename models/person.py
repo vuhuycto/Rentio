@@ -2,6 +2,8 @@ import datetime
 
 from sqlalchemy import Column, Integer, String, Date, Text, ForeignKey
 from sqlalchemy.orm import relationship
+from sqlalchemy import func
+from sqlalchemy.sql import label
 from database import Base, session
 from models.product import ProductModel
 from models.review import ReviewModel
@@ -120,6 +122,42 @@ class UserModel(Base, Person):
     @staticmethod
     def get_all_user():
         return session.query(UserModel).all()
+
+    @staticmethod
+    def get_top_lender():
+        return session.query(
+                UserModel.id,
+                UserModel.first_name,
+                UserModel.last_name,
+                UserModel.gender,
+                UserModel.birthday,
+                UserModel.email,
+                UserModel.username,
+                UserModel.password,
+                UserModel.phone,
+                UserModel.address,
+                UserModel.job,
+                UserModel.free_trial_start,
+                UserModel.free_trial_end,
+                label("average_star", func.sum(ReviewModel.star) / func.count(ReviewModel.product_id))).\
+            join(ProductModel, UserModel.id == ProductModel.user_id).\
+            join(ReviewModel, ProductModel.id == ReviewModel.product_id). \
+            group_by(
+                UserModel.id,
+                UserModel.first_name,
+                UserModel.last_name,
+                UserModel.gender,
+                UserModel.birthday,
+                UserModel.email,
+                UserModel.username,
+                UserModel.password,
+                UserModel.phone,
+                UserModel.address,
+                UserModel.job,
+                UserModel.free_trial_start,
+                UserModel.free_trial_end). \
+            having(func.sum(ReviewModel.star) / func.count(ReviewModel.product_id) >= 4). \
+            all()
 
     @staticmethod
     def add_to_database(user):

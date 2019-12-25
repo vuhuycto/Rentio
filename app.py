@@ -6,8 +6,8 @@ from flask_jwt import JWT
 
 from security import authentication, identity
 from database import Base, engine
-from resources.person import User, UserRegister, Profile, UserList
-from resources.product import Product, Catalog, PopularProduct, CatalogBasedProduct, ProductList
+from resources.person import User, UserRegister, Profile, UserList, TopLender
+from resources.product import Product, Catalog, PopularProduct, CatalogBasedProduct, ProductList, PostedProduct
 from resources.order import RequestedOrder, RequestedOrderList, ResponsedOrder, ResponsedOrderList
 from resources.review import Review
 from resources.report import Report
@@ -49,7 +49,9 @@ api.add_resource(User, "/user/<string:username>")
 api.add_resource(UserList, "/users")
 api.add_resource(Profile, "/edit_profile")
 api.add_resource(Product, "/api/products/posts/<string:name>")
+api.add_resource(PostedProduct, "/api/products/posts/<int:product_id>")
 api.add_resource(ProductList, "/api/products")
+api.add_resource(TopLender, "/api/top_lender")
 api.add_resource(PopularProduct, "/api/products/popular")
 api.add_resource(CatalogBasedProduct, "/api/products/catalog/<string:catalog_type>")
 api.add_resource(RequestedOrder, "/api/products/<int:product_id>/order/request")
