@@ -1,3 +1,5 @@
+import datetime
+
 from flask_restful import Resource, reqparse
 from flask_jwt import jwt_required
 from models.person import UserModel
@@ -54,7 +56,22 @@ class UserRegister(Resource):
 class Profile(Resource):
     parser = reqparse.RequestParser()
     parser.add_argument(
-        "username",
+        "first_name",
+        type=str,
+        required=True,
+        help="This field cannot be left blank")
+    parser.add_argument(
+        "last_name",
+        type=str,
+        required=True,
+        help="This field cannot be left blank")
+    parser.add_argument(
+        "phone",
+        type=str,
+        required=True,
+        help="This field cannot be left blank")
+    parser.add_argument(
+        "email",
         type=str,
         required=True,
         help="This field cannot be left blank")
@@ -80,10 +97,10 @@ class Profile(Resource):
         help="This field cannot be left blank")
 
     @jwt_required()
-    def post(self):
+    def post(self, username):
         data = Profile.parser.parse_args()
 
-        user = UserModel.search_from_database_by_username(data["username"])
+        user = UserModel.search_from_database_by_username(username)
         user.update_attributes(**data)
 
         UserModel.update_to_database(user)
@@ -102,7 +119,8 @@ class TopLender(Resource):
                 "first_name": first_name,
                 "last_name": last_name,
                 "gender": gender,
-                "birthday": birthday,
+                "birthday": birthday.\
+                    strftime("%Y/%m/%d") if isinstance(birthday, datetime.date) else birthday,
                 "email": email,
                 "username": username,
                 "password": password,

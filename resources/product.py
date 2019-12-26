@@ -46,6 +46,9 @@ class Product(Resource):
         required=True,
         help="This field cannot be left blank")
 
+    def get(self, name):
+        return {"products" : [product.json() for product in ProductModel.search_from_database_by_name(name)]}, 200
+
     @jwt_required()
     def post(self, name):
         data = Product.parser.parse_args()
@@ -61,7 +64,7 @@ class Product(Resource):
 
 class PostedProduct(Resource):
     def get(self, product_id):
-        return {"products": ProductModel.search_from_database_by_id(product_id).json()}, 200
+        return ProductModel.search_from_database_by_id(product_id).json(), 200
 
 
 class PopularProduct(Resource):
@@ -83,7 +86,7 @@ class PopularProduct(Resource):
                 "user_id": user_id,
                 "average_star": float(average_star)}
             products.append(product)
-        return {"popular_products": products}, 200
+        return {"products": products}, 200
 
 
 class CatalogBasedProduct(Resource):

@@ -89,7 +89,11 @@ class UserModel(Base, Person):
             format(self.id, self.first_name + self.last_name, self.gender, self.birthday, self.phone, self.address)
 
     def update_attributes(self, **kwargs):
-        self.__dict__.update(**kwargs)
+        attributes = {}
+        for k, v in kwargs.items():
+            if kwargs[k]:
+                attributes.update({k: v})
+        self.__dict__.update(**attributes)
 
     def json(self):
         return {
