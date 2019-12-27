@@ -11,7 +11,7 @@ class ProductModel(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String(50))
-    img_vid_url = Column(String(100))
+    img_vid_url = Column(String(100), nullable=True)
     status = Column(Boolean)
     address = Column(String(50))
     daily_price = Column(Float, nullable=True)
@@ -25,8 +25,7 @@ class ProductModel(Base):
     order = relationship("OrderModel", back_populates="product")
 
     def __repr__(self):
-        return "<Product id={}, status={}, daily price={}, weekly price={}, monthly price={}>".\
-            format(self.id, self.status, self.daily_price, self.weekly_price, self.monthly_price)
+        return str(self.json())
 
     def json(self):
         return {
@@ -40,6 +39,16 @@ class ProductModel(Base):
             "monthly_price": self.monthly_price,
             "user_id": self.user_id
         }
+
+    def update_status(self, status):
+        session.query(ProductModel).filter(ProductModel.id == self.id).\
+            update({ProductModel.status: status}, synchronize_session=False)
+        session.commit()
+
+    def update_img_url(self, url):
+        session.query(ProductModel).filter(ProductModel.id == self.id). \
+            update({ProductModel.img_vid_url: url}, synchronize_session=False)
+        session.commit()
 
     @staticmethod
     def search_from_database_by_name(name):
@@ -55,12 +64,6 @@ class ProductModel(Base):
             filter(and_(ProductModel.id == ProductCatalogRelationship.product_id,
                         CatalogModel.id == ProductCatalogRelationship.catalog_id,
                         CatalogModel.type == catalog_type)).all()
-
-    @staticmethod
-    def update_status(product_id, status):
-        session.query(ProductModel).filter(ProductModel.id == product_id).\
-            update({ProductModel.status: status}, synchronize_session=False)
-        session.commit()
 
     @staticmethod
     def get_popular_products():

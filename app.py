@@ -3,7 +3,6 @@ import os
 from flask import Flask
 from flask_restful import Api
 from flask_jwt import JWT
-from flask_socketio import SocketIO
 
 from security import authentication, identity
 from database import Base, engine
@@ -20,8 +19,8 @@ api = Api(app)
 
 jwt = JWT(app, authentication, identity)    # /auth
 
-notification = SocketIO()
-notification.init_app(app, cors_allowed_origins="*")
+# notification = SocketIO()
+# notification.init_app(app, cors_allowed_origins="*")
 
 Base.metadata.create_all(engine)
 
@@ -65,12 +64,10 @@ api.add_resource(ResponsedOrderList, "/api/products/order/<int:user_id>/response
 api.add_resource(Review, "/api/reviews/<int:product_id>")
 api.add_resource(Catalog, "/api/catalog")
 api.add_resource(Report, "/api/report/<int:user_id>")
-# api.add_resource(RenterNotification, "/notification/renters/<int:renter_id>")
-# api.add_resource(LenderNotification, "/notification/lenders/<int:lender_id>")
-# api.add_resource(ExpiringNotification, "/notification/renters/<int:renter_id>/expiring")
-# api.add_resource(ExpiredNotification, "/notification/renters/<int:renter_id>/expired")
-
-notification.on_namespace(RenterNotification("/notification/renters"))
+api.add_resource(RenterNotification, "/notification/renters/<int:renter_id>")
+api.add_resource(LenderNotification, "/notification/lenders/<int:lender_id>")
+api.add_resource(ExpiringNotification, "/notification/renters/<int:renter_id>/expiring")
+api.add_resource(ExpiredNotification, "/notification/renters/<int:renter_id>/expired")
 
 if __name__ == '__main__':
-    notification.run(app, host="192.168.2.107", port=8080)
+    app.run(host="192.168.2.107", port=8080)

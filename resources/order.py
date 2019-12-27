@@ -134,7 +134,8 @@ class ResponsedOrder(Resource):
         data.update({"notified": False, "expired": False})
 
         OrderModel.update_order(data)
-        ProductModel.update_status(data["product_id"], data["accepted"])
+
+        ProductModel.search_from_database_by_id(data["product_id"]).update_status(data["accepted"])
 
         return {"message": "The lender has been accepted your request"}, 200
 

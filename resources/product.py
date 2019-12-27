@@ -1,17 +1,13 @@
 from flask_restful import Resource, reqparse
 from flask_jwt import jwt_required
 from models.product import ProductModel, CatalogModel
+from models.person import UserModel
 
 
 class Product(Resource):
     parser = reqparse.RequestParser()
     parser.add_argument(
         "name",
-        type=str,
-        required=True,
-        help="This field cannot be left blank")
-    parser.add_argument(
-        "img_vid_url",
         type=str,
         required=True,
         help="This field cannot be left blank")
@@ -47,7 +43,7 @@ class Product(Resource):
         help="This field cannot be left blank")
 
     def get(self, name):
-        return {"products" : [product.json() for product in ProductModel.search_from_database_by_name(name)]}, 200
+        return {"products": [product.json() for product in ProductModel.search_from_database_by_name(name)]}, 200
 
     @jwt_required()
     def post(self, name):
@@ -59,7 +55,17 @@ class Product(Resource):
 
         ProductModel.add_to_database_by_catalog(ProductModel(**data), catalog)
 
-        return {"message": "Product posted successfully"}, 201
+        product = sorted(
+            ProductModel.search_from_database_by_name(data["name"]),
+            key=lambda product: product.id)[-1]
+        username = UserModel.search_from_database_by_id(data["user_id"]).username
+        url = "http://192.168.2.107:8080/" + username + "/" + str(product.id)
+        product.update_img_url(url)
+
+        return {
+            "message": "Product posted successfully",
+            "img_vid_url": url
+        }, 201
 
 
 class PostedProduct(Resource):
@@ -68,7 +74,6 @@ class PostedProduct(Resource):
 
 
 class PopularProduct(Resource):
-    # @jwt_required()
     def get(self):
         products = []
         for product_id, name, img_vid_url, \
@@ -90,18 +95,15 @@ class PopularProduct(Resource):
 
 
 class CatalogBasedProduct(Resource):
-    # @jwt_required()
     def get(self, catalog_type):
         return {"products": [product.json() for product in ProductModel.search_from_database_by_catalog(catalog_type)]}
 
 
 class ProductList(Resource):
-    # @jwt_required()
     def get(self):
         return {"products": [product.json() for product in ProductModel.get_all_products()]}, 200
 
 
 class Catalog(Resource):
-    # @jwt_required()
     def get(self):
         return {"catalogs": [catalog.json() for catalog in CatalogModel.get_all()]}, 200
