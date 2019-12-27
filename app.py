@@ -19,9 +19,6 @@ api = Api(app)
 
 jwt = JWT(app, authentication, identity)    # /auth
 
-# notification = SocketIO()
-# notification.init_app(app, cors_allowed_origins="*")
-
 Base.metadata.create_all(engine)
 
 # from database import session
