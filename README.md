@@ -24,3 +24,8 @@ The task of managing the user object includes: tenants and lessors and rental it
 
 The database of Rentio Web Service:
 ![Rentio Database](architecture_image/database.PNG "Rentio System Architecture")
+
+Inside Web Service, we use MVC model to establish the relationship between objects in the system.
+
+The model of Rentio Web Service:
+![Rentio Web Service Model](architecture_image/mvc.PNG "MVC Model in Web Service")
