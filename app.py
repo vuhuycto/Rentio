@@ -67,4 +67,4 @@ api.add_resource(ExpiringNotification, "/notification/renters/<int:renter_id>/ex
 api.add_resource(ExpiredNotification, "/notification/renters/<int:renter_id>/expired")
 
 if __name__ == '__main__':
-    app.run(host="192.168.2.107", port=8080)
+    app.run(host="172.20.10.5", port=8080)
